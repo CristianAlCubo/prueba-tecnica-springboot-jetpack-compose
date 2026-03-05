@@ -1,7 +1,8 @@
 package com.ccubillos.prueba.controllers
 
 import com.ccubillos.prueba.dto.ApiResponseDTO
-import com.ccubillos.prueba.dto.SleepDataMetricsDTO
+import com.ccubillos.prueba.dto.sleep_data.SleepDataDTO
+import com.ccubillos.prueba.dto.sleep_data.SleepDataMetricsDTO
 import com.ccubillos.prueba.models.SleepData
 import com.ccubillos.prueba.services.SleepDataService
 import org.springframework.http.HttpStatus
@@ -15,11 +16,11 @@ class SleepDataController(
 ) {
 
     @GetMapping
-    fun getSleepData(): ResponseEntity<ApiResponseDTO<List<SleepData>>> =
+    fun getSleepData(): ResponseEntity<ApiResponseDTO<List<SleepDataDTO>>> =
         ResponseEntity.ok(
             ApiResponseDTO(
                 status = HttpStatus.OK,
-                data = sleepDataMetricsService.getAllSleepData()
+                data = sleepDataMetricsService.getAllSleepData().map { SleepDataDTO(it) }
             )
         )
 
@@ -33,11 +34,11 @@ class SleepDataController(
         )
 
     @PostMapping
-    fun saveSleepData(@RequestBody sleepData: SleepData): ResponseEntity<ApiResponseDTO<SleepData>> =
+    fun saveSleepData(@RequestBody sleepData: SleepDataDTO): ResponseEntity<ApiResponseDTO<SleepDataDTO>> =
         ResponseEntity.ok(
-            ApiResponseDTO(
+            ApiResponseDTO<SleepDataDTO>(
                 status = HttpStatus.OK,
-                data = sleepDataMetricsService.saveSleepData(sleepData)
+                data = SleepDataDTO(sleepDataMetricsService.saveSleepData(sleepData))
             )
         )
 }

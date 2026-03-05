@@ -1,11 +1,11 @@
-package com.ccubillos.prueba.dto
+package com.ccubillos.prueba.dto.sleep_data
 
 import com.ccubillos.prueba.models.SleepData
 
 data class SleepDataDTO(
     val id: Long? = null,
     val userId: String,
-    val bedTime: String,
+    val bedtime: String,
     val wakeupTime: String,
     val mood: Int,
     val energy: Int,
@@ -19,8 +19,8 @@ data class SleepDataDTO(
 ) {
     constructor(model: SleepData) : this(
         id = model.id,
-        userId = model.userId,
-        bedTime = model.bedtime,
+        userId = model.user.id.toString(),
+        bedtime = model.bedtime,
         wakeupTime = model.wakeupTime,
         mood = model.mood,
         energy = model.energy,

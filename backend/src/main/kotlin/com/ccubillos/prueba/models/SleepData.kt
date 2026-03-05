@@ -1,5 +1,6 @@
 package com.ccubillos.prueba.models
 
+import com.ccubillos.prueba.dto.sleep_data.SleepDataDTO
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
@@ -11,9 +12,6 @@ class SleepData(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-
-    @Column(nullable = false)
-    var userId: String,
 
     @Column(nullable = false)
     var bedtime: String, // "HH:mm"
@@ -49,8 +47,16 @@ class SleepData(
     var comment: String? = null
 
 ) {
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "user_id",
+        nullable = false,
+        foreignKey = ForeignKey(name = "fk_sleepdata_user")
+    )
+    lateinit var user: User
+
     constructor() : this(
-        userId = "",
         bedtime = "00:00",
         wakeupTime = "00:00",
         mood = 1,

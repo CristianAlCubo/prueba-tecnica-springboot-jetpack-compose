@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.Query
 import java.util.UUID
 
 interface ISleepDataRepository : JpaRepository<SleepData, UUID> {
-    fun findByUserId(userId: String): List<SleepData>?
+    fun findByUserId(userId: UUID): List<SleepData>
 }

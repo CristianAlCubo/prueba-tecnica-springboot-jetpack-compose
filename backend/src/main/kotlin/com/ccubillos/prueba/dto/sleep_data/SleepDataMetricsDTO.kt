@@ -1,4 +1,4 @@
-package com.ccubillos.prueba.dto
+package com.ccubillos.prueba.dto.sleep_data
 
 class SleepDataMetricsDTO(
    var averageSleepHours : Double,
