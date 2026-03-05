@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: demo-tecnica-mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root123       # Contraseña de root
+      MARIADB_DATABASE: db   # Base de datos que creará automáticamente
+      MARIADB_USER: dev             # Usuario que creará
+      MARIADB_PASSWORD: dev123      # Contraseña del usuario
+    ports:
+      - "12345:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
