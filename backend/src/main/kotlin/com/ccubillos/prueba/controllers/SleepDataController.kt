@@ -19,7 +19,7 @@ class SleepDataController(
     fun getSleepData(): ResponseEntity<ApiResponseDTO<List<SleepDataDTO>>> =
         ResponseEntity.ok(
             ApiResponseDTO(
-                status = HttpStatus.OK,
+                status = HttpStatus.OK.value(),
                 data = sleepDataMetricsService.getAllSleepData().map { SleepDataDTO(it) }
             )
         )
@@ -28,7 +28,7 @@ class SleepDataController(
     fun getSleepDataMetrics(@PathVariable userId: String): ResponseEntity<ApiResponseDTO<SleepDataMetricsDTO>> =
         ResponseEntity.ok(
             ApiResponseDTO(
-                status = HttpStatus.OK,
+                status = HttpStatus.OK.value(),
                 data = sleepDataMetricsService.getSleepDataMetricsByUserId(userId)
             )
         )
@@ -37,7 +37,7 @@ class SleepDataController(
     fun saveSleepData(@RequestBody sleepData: SleepDataDTO): ResponseEntity<ApiResponseDTO<SleepDataDTO>> =
         ResponseEntity.ok(
             ApiResponseDTO<SleepDataDTO>(
-                status = HttpStatus.OK,
+                status = HttpStatus.OK.value(),
                 data = SleepDataDTO(sleepDataMetricsService.saveSleepData(sleepData))
             )
         )

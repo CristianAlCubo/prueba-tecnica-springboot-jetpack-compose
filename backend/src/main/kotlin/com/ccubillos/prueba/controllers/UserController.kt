@@ -21,7 +21,7 @@ class UserController(
 ) {
 
     @GetMapping()
-    fun getAll() = ResponseEntity.ok(ApiResponseDTO<List<UserDTO>>(HttpStatus.OK, data = userService.findAll().map { UserDTO(it) }))
+    fun getAll() = ResponseEntity.ok(ApiResponseDTO<List<UserDTO>>(HttpStatus.OK.value(), data = userService.findAll().map { UserDTO(it) }))
 
     @GetMapping("/{username}")
     fun getByUsername(@PathVariable username: String): ResponseEntity<ApiResponseDTO<UserDTO>> {
@@ -29,14 +29,14 @@ class UserController(
         val user = userService.findByUsername(username)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 ApiResponseDTO(
-                    status = HttpStatus.NOT_FOUND,
+                    status = HttpStatus.NOT_FOUND.value(),
                     data = null
                 )
             )
 
         return ResponseEntity.ok(
             ApiResponseDTO(
-                status = HttpStatus.OK,
+                status = HttpStatus.OK.value(),
                 data = UserDTO(user)
             )
         )
@@ -46,11 +46,11 @@ class UserController(
     fun saveUser(@RequestBody user : CreateUserDTO): ResponseEntity<ApiResponseDTO<UserDTO>> {
         if(userService.existsByUsername(user.username)){
             return ResponseEntity.badRequest().body(ApiResponseDTO<UserDTO>(
-                status = HttpStatus.BAD_REQUEST,
+                status = HttpStatus.BAD_REQUEST.value(),
                 error = "Username already exists",
             ))
         }
 
-        return ResponseEntity.ok(ApiResponseDTO(HttpStatus.OK, data = UserDTO(userService.createUser(user.username))));
+        return ResponseEntity.ok(ApiResponseDTO(HttpStatus.OK.value(), data = UserDTO(userService.createUser(user.username))));
     }
 }

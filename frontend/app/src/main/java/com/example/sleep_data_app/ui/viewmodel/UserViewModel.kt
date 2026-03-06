@@ -53,6 +53,9 @@ class UserViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
             val result = repository.getUserByUsername(username)
+
+            println(result)
+
             val user = when (result) {
                 is Result.Success -> result.data
                 is Result.Error -> {
