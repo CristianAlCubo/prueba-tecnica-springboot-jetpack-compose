@@ -23,12 +23,24 @@ fun HomeScreen(
     averageMood: Double,
     sleepDataList: List<SleepData>,
     isLoading: Boolean,
+    snackbarMessage: String?,
+    onSnackbarMessageShown: () -> Unit,
     onAddMeasurementClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onSleepDataClick: (SleepData) -> Unit,
     onRefresh: () -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(snackbarMessage) {
+        if (snackbarMessage != null) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            onSnackbarMessageShown()
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Hola, $username") },

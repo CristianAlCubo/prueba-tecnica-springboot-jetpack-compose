@@ -20,7 +20,11 @@ fun AddSleepDataScreen(
     onBackClick: () -> Unit,
     onSave: (SleepData) -> Unit,
     isLoading: Boolean,
-    error: String?
+    error: String?,
+    saveSuccess: Boolean,
+    onSaveSuccessShown: () -> Unit,
+    onSaveNavigateBack: () -> Unit,
+    onErrorShown: () -> Unit
 ) {
     var bedtime by remember { mutableStateOf("22:00") }
     var wakeupTime by remember { mutableStateOf("07:00") }
@@ -33,8 +37,24 @@ fun AddSleepDataScreen(
     var wokeUpAtNight by remember { mutableStateOf(false) }
     var caffeineAfter6pm by remember { mutableStateOf(false) }
     var comment by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(saveSuccess) {
+        if (saveSuccess) {
+            onSaveSuccessShown()
+            onSaveNavigateBack()
+        }
+    }
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            snackbarHostState.showSnackbar(error)
+            onErrorShown()
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Nueva medici\u00f3n") },

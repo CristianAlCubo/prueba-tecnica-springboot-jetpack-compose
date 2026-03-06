@@ -1,5 +1,6 @@
 package com.example.sleep_data_app.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,6 +23,7 @@ import com.example.sleep_data_app.ui.viewmodel.SleepDataViewModel
 import com.example.sleep_data_app.ui.viewmodel.UserViewModel
 import com.example.sleep_data_app.util.PreferencesManager
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -32,6 +34,7 @@ fun NavGraph(
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager.getInstance(context) }
     val repository = remember { SleepRepository.getInstance() }
+    var pendingHomeSnackbarMessage by remember { mutableStateOf<String?>(null) }
 
     val startDestination = if (userUiState.isLoggedIn) "home" else "login"
 
@@ -71,6 +74,8 @@ fun NavGraph(
                 averageMood = sleepUiState.averageMood,
                 sleepDataList = sleepUiState.sleepDataList,
                 isLoading = sleepUiState.isLoading,
+                snackbarMessage = pendingHomeSnackbarMessage,
+                onSnackbarMessageShown = { pendingHomeSnackbarMessage = null },
                 onAddMeasurementClick = {
                     navController.navigate("add_sleep_data")
                 },
@@ -89,7 +94,11 @@ fun NavGraph(
 
         composable("add_sleep_data") {
             val userId = preferencesManager.getUserId() ?: return@composable
+            val homeBackStackEntry = remember {
+                navController.getBackStackEntry("home")
+            }
             val sleepDataViewModel: SleepDataViewModel = viewModel(
+                viewModelStoreOwner = homeBackStackEntry,
                 factory = SleepDataViewModel.Factory(repository, userId)
             )
             val sleepUiState by sleepDataViewModel.uiState.collectAsState()
@@ -100,7 +109,14 @@ fun NavGraph(
                     sleepDataViewModel.saveSleepData(sleepData)
                 },
                 isLoading = sleepUiState.isLoading,
-                error = sleepUiState.error
+                error = sleepUiState.error,
+                saveSuccess = sleepUiState.saveSuccess,
+                onSaveSuccessShown = { sleepDataViewModel.resetSaveSuccess() },
+                onSaveNavigateBack = {
+                    pendingHomeSnackbarMessage = "Datos guardados con éxito"
+                    navController.popBackStack()
+                },
+                onErrorShown = { sleepDataViewModel.clearError() }
             )
         }
 
